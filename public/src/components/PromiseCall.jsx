@@ -5,32 +5,47 @@ export default class PromiseCall extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: "",
+      call01: "",
+      call02: "",
       loaded: false
     };
   }
 
-  promiseAPIcall() {
+  promiseAPIcall01() {
     return new Promise(resolve => {
       $.get("https://jsonplaceholder.typicode.com/users/", function(data) {
         resolve(data);
-        console.log("Ajax get performed.");
+        console.log("Ajax first API call performed.");
+      });
+    });
+  }
+
+  promiseAPIcall02() {
+    return new Promise(resolve => {
+      $.get("https://jsonplaceholder.typicode.com/albums/1", function(data) {
+        resolve(data);
+        console.log("Ajax second API call performed.");
       });
     });
   }
 
   componentDidMount() {
-    this.promiseAPIcall().then(data =>
-      this.setState({ data, loaded: true }, () => console.log("data", data))
-    );
+    this.promiseAPIcall01().then(call01 => {
+      this.promiseAPIcall02()
+        .then(call02 => {
+          this.setState({ call01, call02, loaded: true });
+        })
+        .catch(error => console.log("Error", error));
+    });
   }
 
   render() {
-    const { loaded, data } = this.state;
+    const { loaded, call01, call02 } = this.state;
     return (
       <div>
-        <h1>Data from called with Promises</h1>
-        {loaded && data.map(el => <p>{el.name}</p>)}
+        <h1>Data from called with Promises =)</h1>
+        {loaded && call01.map(el => <p>{el.name}</p>)}
+        {loaded && <p>Call02: {call02.title}</p>}
       </div>
     );
   }
