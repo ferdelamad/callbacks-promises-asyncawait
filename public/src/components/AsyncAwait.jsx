@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import $ from "jquery";
+import axios from "axios";
 
 export default class Async extends Component {
   constructor(props) {
@@ -11,7 +11,40 @@ export default class Async extends Component {
     };
   }
 
+  componentDidMount() {
+    this.getData();
+  }
+
+  async getData() {
+    try {
+      const call01promise = await axios.get(
+        "https://jsonplaceholder.typicode.com/albums/1"
+      );
+      const call02promise = await axios.get(
+        "https://jsonplaceholder.typicode.com/users/"
+      );
+
+      const [call01, call02] = await Promise.all([
+        call01promise,
+        call02promise
+      ]);
+
+      this.setState({
+        call01,
+        call02
+      });
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  }
+
   render() {
-    return <h1>I'm Async component</h1>;
+    return (
+      <div>
+        <h1>I'm Async component</h1>
+        <p>{JSON.stringify(this.state.call01)}</p>
+        <p>{JSON.stringify(this.state.call02)}</p>
+      </div>
+    );
   }
 }

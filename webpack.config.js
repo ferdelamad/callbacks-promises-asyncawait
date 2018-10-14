@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./public/src/index.jsx",
+  entry: ["babel-polyfill", "./public/src/index.jsx"],
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "./public/dist")
