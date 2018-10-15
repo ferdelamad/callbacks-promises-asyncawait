@@ -12,7 +12,15 @@ export default class Async extends Component {
   }
 
   componentDidMount() {
-    this.getData();
+    this.getData()
+      .then(([call01, call02]) => {
+        this.setState({
+          call01,
+          call02
+        });
+        console.log("Async foo triggered");
+      })
+      .catch(e => console.log(e));
   }
 
   async getData() {
@@ -29,10 +37,7 @@ export default class Async extends Component {
         call02promise
       ]);
 
-      this.setState({
-        call01,
-        call02
-      });
+      return [call01, call02];
     } catch (e) {
       console.log("Error: ", e);
     }
